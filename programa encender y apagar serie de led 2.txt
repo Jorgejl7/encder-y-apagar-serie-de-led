@@ -1,0 +1,89 @@
+const int POTENCIOMETRO = 0;
+const int LED1=5;
+const int LED2=6;
+const int LED3=7;
+const int LED4=8;
+const int LED5=9;
+const int LED6=10;
+const int LED7=11;
+const int LED8=12;
+
+const int BOTON=A2;
+int val = 0; //val se emplea para almacenar el estado del boton
+int state = 0; // 0 LED apagado, mientras que 1 encendido
+int old_val = 0; // almacena el antiguo valor de val
+int intensidad;
+int input;
+int i=0;
+
+
+void setup(){
+pinMode(LED1,OUTPUT);
+pinMode(LED2,OUTPUT);
+pinMode(LED3,OUTPUT);
+pinMode(LED4,OUTPUT);
+pinMode(LED5,OUTPUT);
+pinMode(LED6,OUTPUT);
+pinMode(LED7,OUTPUT);
+pinMode(LED8,OUTPUT);
+pinMode(BOTON,INPUT);
+Serial.begin(9600);
+}
+
+
+void loop(){
+pinMode(LED1,HIGH);
+pinMode(LED2,HIGH);
+pinMode(LED3,HIGH);
+pinMode(LED4,HIGH);
+pinMode(LED5,HIGH);
+pinMode(LED6,HIGH);
+pinMode(LED7,HIGH);
+pinMode(LED8,HIGH);
+    
+val=digitalRead(BOTON);
+if(val ==LOW){
+    digitalWrite(LED1,HIGH);
+    digitalWrite(LED2,HIGH);
+    digitalWrite(LED3,HIGH);
+    digitalWrite(LED4,HIGH);
+    digitalWrite(LED5,HIGH);
+    digitalWrite(LED6,HIGH);
+    digitalWrite(LED7,HIGH);
+    digitalWrite(LED8,HIGH);
+}
+    
+if ((val == HIGH) && (old_val == LOW)){
+  
+state=1-state;
+delay(10);
+}
+
+if  (state==1){
+  
+  int valorport=0;
+  valorport= analogRead(POTENCIOMETRO);
+  intensidad = map(valorport,0,1023,0,255);
+  for(i=5; i<13;i++){
+        analogWrite(i,intensidad);
+      }
+    
+    delay(25);
+    
+}
+if (Serial.available()>0){
+ 
+    input=Serial.read();
+ 
+    if (input=='2'){
+      for(i=5; i<13;i++){
+        digitalWrite(i,HIGH);
+      }
+      delay(2000);
+     for(i=5; i<13;i++){
+        digitalWrite(i,LOW);
+      }
+      delay(2000);
+    }
+}
+}
